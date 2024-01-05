@@ -10,7 +10,7 @@
    <children>
       <VBox layoutX="8.0" layoutY="8.0" prefHeight="330.0" prefWidth="377.0" />
       <TextField fx:id="NameIn" layoutX="216.0" layoutY="34.0" prefHeight="0.0" prefWidth="149.0" />
-      <Button layoutX="47.0" layoutY="148.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="501" />
+      <Button layoutX="47.0" layoutY="148.0" mnemonicParsing="false" onMouseClicked="#Chooser" prefHeight="25.0" prefWidth="86.0" text="501" />
       <Button layoutX="47.0" layoutY="183.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="503" />
       <Button layoutX="47.0" layoutY="219.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="701" />
       <Button layoutX="47.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="304" />
