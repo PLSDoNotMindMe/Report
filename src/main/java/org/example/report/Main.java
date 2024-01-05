@@ -4,18 +4,30 @@ import com.spire.xls.collections.AutoFiltersCollection;
 import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
 import com.spire.xls.*;
 
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) {
+
+        File f = new File("C:\\Users\\SerPivas\\Desktop\\Ошибки");
+        try{
+            if(f.mkdir()) {
+                System.out.println("Directory Created");
+            } else {
+                System.out.println("Directory is not created");
+            }
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
+
         //Создание документа, установка автофильтра
-        /*Scanner scan = new Scanner(System.in);
-        String stockName = scan.nextLine();*/
         Workbook wb = new Workbook();
         wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\stock_23641575982000.xlsx");
-        Worksheet sheet1 = wb.getWorksheets().get(0);
-        sheet1.setName("Сток");
-        Worksheet sheet2 = wb.getWorksheets().add("Некорректное размещение груза");
-        AutoFiltersCollection filters = sheet1.getAutoFilters();
-        filters.setRange(sheet1.getCellRange(1,1,20762,34));
+        Worksheet sheet = wb.getWorksheets().get(0);
+        sheet.setName("Сток");
+        AutoFiltersCollection filters = sheet.getAutoFilters();
+        filters.setRange(sheet.getCellRange(1,1,20762,34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 308 ОШИБКИ:
         //Фильтр колонки "Статус"
@@ -36,8 +48,7 @@ public class Main {
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
         filters.filter();
-
-        wb.saveToFile("");
+        wb.saveToFile("C:\\Users\\SerPivas\\Desktop\\Ошибки\\308.xlsx");
 
     }
 }
