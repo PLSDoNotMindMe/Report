@@ -37,7 +37,7 @@ public class Main {
         filters.addFilter(27, "Нет");
         filters.filter();
 
-        wb.save();
+        wb.saveToFile("");
 
     }
 }
