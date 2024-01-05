@@ -10,6 +10,7 @@ module org.example.report {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires spire.xls;
 
     opens org.example.report to javafx.fxml;
     exports org.example.report;
