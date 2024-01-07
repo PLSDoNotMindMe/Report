@@ -4,18 +4,23 @@ import com.spire.xls.Workbook;
 import com.spire.xls.Worksheet;
 import com.spire.xls.collections.AutoFiltersCollection;
 import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
+import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class FilterController {
 
     String nameFile;
     String user;
+    FileChooser fileChooser = new FileChooser();
 
     @FXML
     private TextField NameIn;
@@ -23,10 +28,10 @@ public class FilterController {
     @FXML
     void name(MouseEvent event) {
         nameFile = NameIn.getText();
-        System.out.println("TextDone");
+        System.out.println(nameFile);
     }
 
-    @FXML
+     @FXML
     void createFolder(MouseEvent event) {
         user = System.getProperty("user.name");
 
@@ -73,6 +78,75 @@ public class FilterController {
         filters.addFilter(27, "Нет");
         filters.filter();
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\308.xlsx");
+    }
+
+    @FXML
+    void Error501(MouseEvent event) {
+        //Создание документа, установка автофильтра
+        Workbook wb = new Workbook();
+        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        Worksheet sheet = wb.getWorksheets().get(0);
+        sheet.setName("Сток");
+        AutoFiltersCollection filters = sheet.getAutoFilters();
+        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+
+        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 501 ОШИБКИ:
+        //Добавить столбец для ВПР
+        sheet.insertColumn(34);
+        sheet.get(1,34).setValue("ВПР");
+        sheet.get(1,33).get(String.format("AH1")).setStyle(sheet.get(1,34).get(String.format("AG1")).getStyle());
+        //Фильтр колонки "Тип"
+        filters.addFilter(3, "Отправление");
+        //Фильтр колонки "Контейнер (груз)"
+        filters.addFilter(4, "empty");
+        //Фильтр колонки "Поток"
+        filters.addFilter(16, "Прямой");
+        //Фильтр колонки "Транзит"
+        filters.addFilter(17, "Транзитный пункт");
+        //Фильтр колонки "В перевозке"
+        filters.addFilter(27, "Нет");
+        //Фильтр колонки "В перевозке"
+        filters.customFilter(23, FilterOperatorType.NotEqual,"СПБ_ТСЦ_Шушары");
+        //Фильтр колонки "Дата прихода"
+        java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
+        filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
+        filters.filter();
+        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\501.xlsx");
+    }
+
+    @FXML
+    void Error304(MouseEvent event) {
+        //Создание документа, установка автофильтра
+        Workbook wb = new Workbook();
+        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        Worksheet sheet = wb.getWorksheets().get(0);
+        sheet.setName("Сток");
+        AutoFiltersCollection filters = sheet.getAutoFilters();
+        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+
+        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 304 ОШИБКИ:
+        //Фильтр колонки "Контейнер (груз)"
+        filters.addFilter(4, "empty");
+        //Фильтр колонки "Статус"
+        filters.addFilter(2, "Сформирован");
+        //Фильтр колонки "Тип"
+        filters.addFilter(3, "Отправление");
+        filters.addFilter(3, "Тарный ящик");
+        //Фильтр колонки "Цена"
+        filters.customFilter(9, FilterOperatorType.NotEqual," ");
+        //Фильтр колонки "Дата прихода"
+        java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
+        filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
+        //Фильтр колонки "В перевозке"
+        filters.addFilter(27, "Нет");
+        //Фильтр колонки "Поток"
+        filters.addFilter(16, "Прямой");
+        //Фильтр колонки "Транзит"
+        filters.addFilter(17, "Транзитный пункт");
+        //Фильтр колонки "Зона"
+        filters.customFilter(10, FilterOperatorType.NotEqual,"Зона контроля", true,FilterOperatorType.NotEqual,"Зона возвратов");
+        filters.filter();
+        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\304.xlsx");
     }
 
 }
