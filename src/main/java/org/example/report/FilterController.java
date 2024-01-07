@@ -92,6 +92,7 @@ public class FilterController {
         sheet.insertColumn(34);
         sheet.get(1,34).setValue("ВПР");
         sheet.get(1,33).get(String.format("AH1")).setStyle(sheet.get(1,34).get(String.format("AG1")).getStyle());
+        sheet.get(1,34).autoFitColumns();
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Отправление");
         //Фильтр колонки "Контейнер (груз)"
@@ -225,6 +226,64 @@ public class FilterController {
 
     @FXML
     void Error601(MouseEvent event) {
+        //Создание документа, установка автофильтра
+        Workbook wb = new Workbook();
+        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        Worksheet sheet = wb.getWorksheets().get(0);
+        AutoFiltersCollection filters = sheet.getAutoFilters();
+        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+
+        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 601 ОШИБКИ:
+        //Фильтр колонки "Статус"
+        filters.addFilter(2, "Сформирован");
+        filters.addFilter(2, "Прибыл в место назначения");
+        //Фильтр колонки "Контейнер (груз)"
+        filters.addFilter(4, "empty");
+        //Фильтр колонки "Тип"
+        filters.addFilter(3, "Отправление");
+        filters.addFilter(3, "Экземпляр товара");
+        //Фильтр колонки "Текущее место"
+        filters.customFilter(11,FilterOperatorType.NotEqual,"Компенсированные",true, FilterOperatorType.NotEqual, "Протечка");
+        filters.customFilter(11,FilterOperatorType.NotEqual,"Просроченные");
+        //Фильтр колонки "Поток"
+        filters.addFilter(16, "Возвратный");
+        //Добавить столбец для ВПР
+        sheet.insertColumn(2);
+        sheet.get(1,2).setValue("Детализация");
+        sheet.get(1,33).get(String.format("B1")).setStyle(sheet.get(1,34).get(String.format("A1")).getStyle());
+        sheet.get(1,2).autoFitColumns();
+        filters.filter();
+        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\601.xlsx");
+    }
+
+    @FXML
+    void Error627(MouseEvent event) {
+        //Создание документа, установка автофильтра
+        Workbook wb = new Workbook();
+        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        Worksheet sheet = wb.getWorksheets().get(0);
+        AutoFiltersCollection filters = sheet.getAutoFilters();
+        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+
+        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 627 ОШИБКИ:
+        //Фильтр колонки "Тип"
+        filters.addFilter(3, "Коробка");
+        filters.addFilter(3, "Мешок");
+        filters.addFilter(3, "Сейф пакет");
+        //Фильтр колонки "Статус"
+        filters.addFilter(2, "Сформирован");
+        filters.addFilter(2, "Прибыл в место назначения");
+        //Фильтр колонки "Цена"
+        filters.customFilter(9, FilterOperatorType.NotEqual," ");
+        //Фильтр колонки "Дата прихода"
+        java.time.LocalDate current_date = java.time.LocalDate.now();
+        filters.customFilter(12,FilterOperatorType.NotEqual,current_date);
+        filters.filter();
+        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\627.xlsx");
+    }
+
+    @FXML
+    void Transit(MouseEvent event) {
 
     }
 
