@@ -51,7 +51,7 @@ public class FilterController {
     void Error308(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -82,7 +82,7 @@ public class FilterController {
     void Error501(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -116,7 +116,7 @@ public class FilterController {
     void Error304(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -150,7 +150,7 @@ public class FilterController {
     void Error201615(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -177,7 +177,7 @@ public class FilterController {
     void Error106(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -199,7 +199,7 @@ public class FilterController {
     void Error307(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -228,7 +228,7 @@ public class FilterController {
     void Error601(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -260,7 +260,7 @@ public class FilterController {
     void Error627(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\SerPivas\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
