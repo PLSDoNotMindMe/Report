@@ -15,6 +15,8 @@ public class FilterApplication extends Application {
         stage.setTitle("Работа с отчётом");
         stage.setScene(scene);
         stage.show();
+
+        System.out.println("Test");
     }
 
     public static void main(String[] args) {

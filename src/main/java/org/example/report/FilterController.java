@@ -16,7 +16,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+
+
+
+
 public class FilterController {
+
 
     String nameFile;
     String user;
@@ -24,6 +29,7 @@ public class FilterController {
 
     @FXML
     private TextField NameIn;
+
 
     @FXML
     void name(MouseEvent event) {
