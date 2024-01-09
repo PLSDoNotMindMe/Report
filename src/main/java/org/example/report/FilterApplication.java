@@ -16,7 +16,7 @@ public class FilterApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
-        System.out.println("Test");
+        System.out.println("Test22");
     }
 
     public static void main(String[] args) {
