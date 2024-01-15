@@ -109,7 +109,7 @@ public class FilterController {
         filters.addFilter(17, "Транзитный пункт");
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
-        //Фильтр колонки "В перевозке"
+        //Фильтр колонки "Сортировочный центр"
         filters.customFilter(23, FilterOperatorType.NotEqual,"СПБ_ТСЦ_Шушары");
         //Фильтр колонки "Дата прихода"
         java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
