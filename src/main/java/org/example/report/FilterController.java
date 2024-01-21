@@ -6,7 +6,9 @@ import com.spire.xls.collections.AutoFiltersCollection;
 import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
 import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
@@ -14,18 +16,42 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 
 
 
 
-public class FilterController {
+public class FilterController implements Initializable {
 
-
+    FileChooser fileChooser = new FileChooser();
     String nameFile;
     String user;
-    FileChooser fileChooser = new FileChooser();
+    String fileCh;
+    String filename;
+
+    @FXML
+    void chooseFile(MouseEvent event) {
+
+        File file = fileChooser.showOpenDialog(new Stage());
+        file.getAbsoluteFile();
+        fileCh = String.valueOf(file);
+        filename = file.getName();
+        nameout.appendText(filename + "; ");
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        user = System.getProperty("user.name");
+        fileChooser.setInitialDirectory(new File("C:\\Users\\" + user + "\\Desktop"));
+    }
+
+    @FXML
+    private TextArea nameout; {
+
+    }
 
     @FXML
     private TextField NameIn;
@@ -33,8 +59,8 @@ public class FilterController {
 
     @FXML
     void name(MouseEvent event) {
-        nameFile = NameIn.getText();
-        System.out.println(nameFile);
+        //nameFile = NameIn.getText();
+       // System.out.println(nameFile);
     }
 
      @FXML
@@ -57,7 +83,7 @@ public class FilterController {
     void Error308(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -88,7 +114,7 @@ public class FilterController {
     void Error501(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -293,5 +319,8 @@ public class FilterController {
 
     }
 
+
 }
+
+
 
