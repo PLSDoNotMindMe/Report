@@ -148,7 +148,7 @@ public class FilterController implements Initializable {
     void Error304(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -182,7 +182,7 @@ public class FilterController implements Initializable {
     void Error201615(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -209,7 +209,7 @@ public class FilterController implements Initializable {
     void Error106(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -231,7 +231,7 @@ public class FilterController implements Initializable {
     void Error307(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -260,7 +260,7 @@ public class FilterController implements Initializable {
     void Error601(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
@@ -292,7 +292,7 @@ public class FilterController implements Initializable {
     void Error627(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
-        wb.loadFromFile("C:\\Users\\" + user + "\\Downloads\\" + nameFile + ".xlsx");
+        wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
