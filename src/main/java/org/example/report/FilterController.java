@@ -15,11 +15,13 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-
-
 
 
 
@@ -29,8 +31,28 @@ public class FilterController implements Initializable {
     String user;
     String fileCh;
     String filename;
-    String dateCh;
+    java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
 
+
+    @FXML
+    private Label nameout;
+
+
+    @FXML
+    void name(MouseEvent event) {
+
+    }
+
+    @FXML
+    private Button newfile;
+
+    @FXML
+    private Label ErrorChoose;
+
+    @FXML
+    private Separator seperator1;
+
+    // Выбор файла
     @FXML
     void chooseFile(MouseEvent event) {
 
@@ -47,31 +69,17 @@ public class FilterController implements Initializable {
         fileChooser.setInitialDirectory(new File("C:\\Users\\" + user + "\\Desktop"));
     }
 
-    @FXML
-    private Label nameout;
-
-
-    @FXML
-    void name(MouseEvent event) {
-
-    }
-
-    @FXML
-    private Button newfile;
-
-
+    //Создание ексель файла
     @FXML
     void createFile(MouseEvent event) {
-
+        java.time.LocalDate newdate = LocalDate.now();
+        DateTimeFormatter formatdate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        Workbook wb = new Workbook();
+        wb.getWorksheets().clear();
+        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
     }
 
-    @FXML
-    private Label ErrorChoose;
-
-    @FXML
-    private Separator seperator1;
-
-
+    //Создание папки
     @FXML
     void createFolder(MouseEvent event) {
         user = System.getProperty("user.name");
@@ -107,13 +115,12 @@ public class FilterController implements Initializable {
         filters.addFilter(3, "RollCage");
         filters.addFilter(3, "Мешок");
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "empty");
+        filters.addFilter(4,"");
         //Фильтр колонки "Зона"
         filters.addFilter(10, "Зона контроля");
         filters.addFilter(10, "Зона приемки");
         filters.addFilter(10, "Шут");
         //Фильтр колонки "Дата прихода"
-        java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
@@ -139,7 +146,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Отправление");
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "empty");
+        filters.addFilter(4, "");
         //Фильтр колонки "Поток"
         filters.addFilter(16, "Прямой");
         //Фильтр колонки "Транзит"
@@ -149,7 +156,6 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Сортировочный центр"
         filters.customFilter(23, FilterOperatorType.NotEqual,"СПБ_ТСЦ_Шушары");
         //Фильтр колонки "Дата прихода"
-        java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         filters.filter();
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\501.xlsx");
@@ -166,7 +172,7 @@ public class FilterController implements Initializable {
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 304 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "empty");
+        filters.addFilter(4, "");
         //Фильтр колонки "Статус"
         filters.addFilter(2, "Сформирован");
         //Фильтр колонки "Тип"
@@ -175,7 +181,6 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
-        java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
@@ -203,14 +208,13 @@ public class FilterController implements Initializable {
         filters.addFilter(2, "Сформирован");
         filters.addFilter(2, "Прибыл в место назначения");
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "empty");
+        filters.addFilter(4, "");
         //Фильтр колонки "Текущее место"
         filters.customFilter(11,FilterOperatorType.Equal,"Зона контроля-Зона контроля-Found-04MU/Зона контроля-Found-04KU",false, FilterOperatorType.Equal, "Зона контроля-Found");
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
-        java.time.LocalDate current_date = java.time.LocalDate.now();
-        java.time.LocalDate current_date1 = java.time.LocalDate.now().minusDays(1);
+        java.time.LocalDate current_date1 = java.time.LocalDate.now();
         filters.customFilter(12,FilterOperatorType.NotEqual,current_date, true, FilterOperatorType.NotEqual,current_date1);
         filters.filter();
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\201,615.xlsx");
@@ -227,7 +231,7 @@ public class FilterController implements Initializable {
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 106 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "empty");
+        filters.addFilter(4, "");
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
         //Фильтр колонки "Зона"
@@ -249,11 +253,10 @@ public class FilterController implements Initializable {
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 307 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "empty");
+        filters.addFilter(4, "");
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
         //Фильтр колонки "Дата прихода"
-        java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         //Фильтр колонки "Зона"
         filters.addFilter(10,"Зона возвратов");
@@ -281,7 +284,7 @@ public class FilterController implements Initializable {
         filters.addFilter(2, "Сформирован");
         filters.addFilter(2, "Прибыл в место назначения");
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "empty");
+        filters.addFilter(4, "");
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Отправление");
         filters.addFilter(3, "Экземпляр товара");
@@ -320,8 +323,8 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
-        java.time.LocalDate current_date = java.time.LocalDate.now();
-        filters.customFilter(12,FilterOperatorType.NotEqual,current_date);
+        java.time.LocalDate current_date1 = java.time.LocalDate.now();
+        filters.customFilter(12,FilterOperatorType.NotEqual,current_date1);
         filters.filter();
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\627.xlsx");
     }
