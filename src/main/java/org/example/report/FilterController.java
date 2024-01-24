@@ -7,9 +7,7 @@ import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
 import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -17,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -27,10 +26,10 @@ import java.util.Scanner;
 public class FilterController implements Initializable {
 
     FileChooser fileChooser = new FileChooser();
-    String nameFile;
     String user;
     String fileCh;
     String filename;
+    String dateCh;
 
     @FXML
     void chooseFile(MouseEvent event) {
@@ -39,7 +38,7 @@ public class FilterController implements Initializable {
         file.getAbsoluteFile();
         fileCh = String.valueOf(file);
         filename = file.getName();
-        nameout.appendText(filename + "; ");
+        nameout.setText(filename);
     }
 
     @Override
@@ -49,21 +48,31 @@ public class FilterController implements Initializable {
     }
 
     @FXML
-    private TextArea nameout; {
-
-    }
-
-    @FXML
-    private TextField NameIn;
+    private Label nameout;
 
 
     @FXML
     void name(MouseEvent event) {
-        //nameFile = NameIn.getText();
-       // System.out.println(nameFile);
+
     }
 
-     @FXML
+    @FXML
+    private Button newfile;
+
+
+    @FXML
+    void createFile(MouseEvent event) {
+
+    }
+
+    @FXML
+    private Label ErrorChoose;
+
+    @FXML
+    private Separator seperator1;
+
+
+    @FXML
     void createFolder(MouseEvent event) {
         user = System.getProperty("user.name");
 
@@ -78,6 +87,8 @@ public class FilterController implements Initializable {
             e.printStackTrace();
         }
     }
+
+
 
     @FXML
     void Error308(MouseEvent event) {
@@ -275,8 +286,9 @@ public class FilterController implements Initializable {
         filters.addFilter(3, "Отправление");
         filters.addFilter(3, "Экземпляр товара");
         //Фильтр колонки "Текущее место"
-        filters.customFilter(11,FilterOperatorType.NotEqual,"Компенсированные",true, FilterOperatorType.NotEqual, "Протечка");
-        filters.customFilter(11,FilterOperatorType.NotEqual,"Просроченные");
+        filters.removeFilter(11,"Компенсированные");
+        filters.removeFilter(11,"Протечка");
+        filters.removeFilter(11,"Просроченные");
         //Фильтр колонки "Поток"
         filters.addFilter(16, "Возвратный");
         //Добавить столбец для ВПР
