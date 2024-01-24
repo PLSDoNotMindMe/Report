@@ -1,7 +1,6 @@
 package org.example.report;
 
-import com.spire.xls.Workbook;
-import com.spire.xls.Worksheet;
+import com.spire.xls.*;
 import com.spire.xls.collections.AutoFiltersCollection;
 import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
 import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
@@ -13,16 +12,15 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Scanner;
-
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class FilterController implements Initializable {
@@ -30,8 +28,11 @@ public class FilterController implements Initializable {
     FileChooser fileChooser = new FileChooser();
     String user;
     String fileCh;
+    String fileerror;
     String filename;
     java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
+    java.time.LocalDate newdate = LocalDate.now();
+    DateTimeFormatter formatdate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
 
     @FXML
@@ -72,8 +73,6 @@ public class FilterController implements Initializable {
     //Создание ексель файла
     @FXML
     void createFile(MouseEvent event) {
-        java.time.LocalDate newdate = LocalDate.now();
-        DateTimeFormatter formatdate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         Workbook wb = new Workbook();
         wb.getWorksheets().clear();
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
@@ -96,6 +95,34 @@ public class FilterController implements Initializable {
         }
     }
 
+    @FXML
+    void Error503(MouseEvent event) {
+        //Выбор файла, создание документа
+        File file = fileChooser.showOpenDialog(new Stage());
+        file.getAbsoluteFile();
+        fileerror = String.valueOf(file);
+        Workbook wb = new Workbook();
+        wb.loadFromFile(fileerror,",",1,1);
+        Worksheet sheet = wb.getWorksheets().get(0);
+
+        CellRange range = sheet.getCellRange("M1:M30000");
+        range.setNumberFormat("dd.mm.yyyy");
+        //Перенос текста по столбцам и применение автофильтра
+        CellRange usedRange = sheet.getAllocatedRange();
+        usedRange.setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
+
+        AutoFiltersCollection filters = sheet.getAutoFilters();
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 22));
+        //Фильтр колонки "Статус"
+        filters.addFilter(6,"Сформирован");
+        //Фильтр колонки "Завершили формирование"
+        java.time.LocalDate current_date1 = java.time.LocalDate.now();
+        filters.customFilter(12,FilterOperatorType.NotEqual,current_date1,true,FilterOperatorType.NotEqual,"");
+        filters.filter();
+
+        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\503.xlsx");
+
+    }
 
 
     @FXML
@@ -104,8 +131,9 @@ public class FilterController implements Initializable {
         Workbook wb = new Workbook();
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
+        Worksheet sheet1 = wb.getWorksheets().add("Некорректное размещение груза");
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 308 ОШИБКИ:
         //Фильтр колонки "Статус"
@@ -125,7 +153,33 @@ public class FilterController implements Initializable {
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
         filters.filter();
+
+        //Сводная таблица
+        CellRange dataRange = sheet.getCellRange("A1:AH3000");
+        PivotCache cache = wb.getPivotCaches().add(dataRange);
+        PivotTable pt = sheet1.getPivotTables().add("Pivot Table", sheet1.getCellRange("A3"), cache);
+        PivotField pf=null;
+        if (pt.getPivotFields().get("Зона") instanceof PivotField){
+            pf= (PivotField) pt.getPivotFields().get("Зона");
+        }
+        pf.setAxis(AxisTypes.Row);
+        pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
+        PivotField pf2 = null;
+        if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField){
+            pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
+        }
+        pf2.setAxis(AxisTypes.Column);
+        pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\308.xlsx");
+
+        //Копирование листа в другой файл
+        Workbook wb2 = new Workbook();
+        wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
+        Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Некорректное размещение груза");
+        sheetOfWorkbook1.copyFrom(sheet1);
+        sheet1.getAllocatedRange().autoFitColumns();
+        wb2.save();
     }
 
     @FXML
@@ -135,7 +189,7 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 501 ОШИБКИ:
         //Добавить столбец для ВПР
@@ -158,6 +212,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Дата прихода"
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         filters.filter();
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\501.xlsx");
     }
 
@@ -168,7 +223,7 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 304 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -191,6 +246,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Зона"
         filters.customFilter(10, FilterOperatorType.NotEqual,"Зона контроля", true,FilterOperatorType.NotEqual,"Зона возвратов");
         filters.filter();
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\304.xlsx");
     }
 
@@ -201,7 +257,7 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 201/615 ОШИБКИ:
         //Фильтр колонки "Статус"
@@ -214,10 +270,14 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
+        CellRange range = sheet.getCellRange("M1:M30000");
+        range.setNumberFormat("dd.MM.yyyy");
         java.time.LocalDate current_date1 = java.time.LocalDate.now();
-        filters.customFilter(12,FilterOperatorType.NotEqual,current_date, true, FilterOperatorType.NotEqual,current_date1);
+        filters.customFilter(12,FilterOperatorType.NotEqual,current_date1,true,FilterOperatorType.NotEqual,current_date);
         filters.filter();
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\201,615.xlsx");
+
     }
 
     @FXML
@@ -227,7 +287,7 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 106 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -239,6 +299,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Текущее место"
         filters.addFilter(11,"Зона контроля/Зона контроля-Expired SLA");
         filters.filter();
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\106.xlsx");
     }
 
@@ -249,7 +310,7 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 307 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -267,6 +328,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Отправление");
         filters.filter();
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\307.xlsx");
     }
 
@@ -277,7 +339,7 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 601 ОШИБКИ:
         //Фильтр колонки "Статус"
@@ -300,6 +362,7 @@ public class FilterController implements Initializable {
         sheet.get(1,33).get(String.format("B1")).setStyle(sheet.get(1,34).get(String.format("A1")).getStyle());
         sheet.get(1,2).autoFitColumns();
         filters.filter();
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\601.xlsx");
     }
 
@@ -310,7 +373,7 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 20762, 34));
+        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 627 ОШИБКИ:
         //Фильтр колонки "Тип"
@@ -323,9 +386,12 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
+        CellRange range = sheet.getCellRange("M1:M30000");
+        range.setNumberFormat("dd.MM.yyyy");
         java.time.LocalDate current_date1 = java.time.LocalDate.now();
         filters.customFilter(12,FilterOperatorType.NotEqual,current_date1);
         filters.filter();
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\627.xlsx");
     }
 
