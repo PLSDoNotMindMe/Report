@@ -102,15 +102,14 @@ public class FilterController implements Initializable {
         file.getAbsoluteFile();
         fileerror = String.valueOf(file);
         Workbook wb = new Workbook();
-        wb.loadFromFile(fileerror,",",1,1);
+        wb.loadFromFile(fileerror, ",");
         Worksheet sheet = wb.getWorksheets().get(0);
+        CellRange usedRange = sheet.getAllocatedRange();
+        usedRange.setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
 
         CellRange range = sheet.getCellRange("M1:M30000");
         range.setNumberFormat("dd.mm.yyyy");
         //Перенос текста по столбцам и применение автофильтра
-        CellRange usedRange = sheet.getAllocatedRange();
-        usedRange.setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
-
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, 30000, 22));
         //Фильтр колонки "Статус"
