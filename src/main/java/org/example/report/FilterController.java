@@ -1,19 +1,27 @@
 package org.example.report;
 
+import com.almasb.fxgl.audio.Audio;
+import com.almasb.fxgl.audio.AudioPlayer;
+import com.spire.pdf.htmlconverter.qt.Clip;
 import com.spire.xls.*;
 import com.spire.xls.collections.AutoFiltersCollection;
 import com.spire.xls.collections.PivotTablesCollection;
 import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
 import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
 import com.spire.xls.core.spreadsheet.pivottables.XlsPivotField;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +33,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
+
+
+
 public class FilterController implements Initializable {
+
 
     FileChooser fileChooser = new FileChooser();
     String user;
@@ -35,10 +47,18 @@ public class FilterController implements Initializable {
     java.time.LocalDate current_date = java.time.LocalDate.now().minusDays(1);
     java.time.LocalDate newdate = LocalDate.now();
     DateTimeFormatter formatdate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    String audeioPath = "C:\\Windows\\Media\\Windows Message Nudge.wav";
+
+
+    @FXML
+    private CheckBox Check;
 
 
     @FXML
     private Label nameout;
+
+    public FilterController() throws FileNotFoundException {
+    }
 
 
     @FXML
@@ -54,6 +74,12 @@ public class FilterController implements Initializable {
 
     @FXML
     private Separator seperator1;
+
+    @FXML
+    void CheckPt(ActionEvent event) {
+
+
+    }
 
     // Выбор файла
     @FXML
@@ -109,11 +135,11 @@ public class FilterController implements Initializable {
         CellRange usedRange = sheet.getAllocatedRange();
         usedRange.setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
 
-        CellRange range = sheet.getCellRange("M1:M30000");
+        CellRange range = sheet.getCellRange("M1:M40000");
         range.setNumberFormat("dd.mm.yyyy");
         //Перенос текста по столбцам и применение автофильтра
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 22));
+        filters.setRange(sheet.getCellRange(1, 1, 40000, 22));
         //Фильтр колонки "Статус"
         filters.addFilter(6,"Сформирован");
         //Фильтр колонки "Завершили формирование"
@@ -132,10 +158,9 @@ public class FilterController implements Initializable {
         Workbook wb = new Workbook();
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
-        Worksheet sheet3 = wb.getWorksheets().add("test");
-        Worksheet sheet1 = wb.getWorksheets().add("Некорректное размещение груза");
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 308 ОШИБКИ:
@@ -146,93 +171,79 @@ public class FilterController implements Initializable {
         filters.addFilter(3, "RollCage");
         filters.addFilter(3, "Мешок");
         //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4,"");
+        filters.addFilter(4, "");
         //Фильтр колонки "Зона"
         filters.addFilter(10, "Зона контроля");
         filters.addFilter(10, "Зона приемки");
         filters.addFilter(10, "Шут");
         //Фильтр колонки "Дата прихода"
+        CellRange range = sheet.getCellRange("M1:M"+lastr);;
+        range.setNumberFormat("dd.mm.yyyy");
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
         filters.filter();
 
-        int index = 0;
-        for (int i = 1; i <= sheet.getRows().length; i++)
-        {
-            if (sheet.getRowIsHide(i))
-            {
-                continue;
+        if (Check.isSelected()) {
+
+            //Копирование видимых ячеек
+            Worksheet sheet3 = wb.getWorksheets().add("308");
+            Worksheet sheet4 = wb.getWorksheets().add("Ненормативные возвраты");
+
+            int index = 0;
+            for (int i = 1; i <= sheet.getRows().length; i++) {
+                if (sheet.getRowIsHide(i)) {
+                    continue;
+                } else {
+                    sheet3.insertRow(index + 1);
+                    sheet.copy(sheet.getRows()[i - 1], sheet3.getRows()[index], true, true, true);
+                    index++;
+                }
+                System.out.println(i);
             }
-            else
-            {
-                sheet3.insertRow(index + 1);
-                sheet.copy(sheet.getRows()[i - 1], sheet3.getRows()[index], true, true, true);
-                index++;
+
+            //Копирование листа в другой файл
+            Workbook wb2 = new Workbook();
+            wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
+            Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Некорректное размещение груза");
+            Worksheet sheetwork = wb2.getWorksheets().add("308");
+            sheetwork.copyFrom(sheet3);
+
+            //Сводная таблица
+            CellRange dataRange = sheetwork.getCellRange("A1:AH"+lastr);;
+            PivotCache cache = wb2.getPivotCaches().add(dataRange);
+            PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
+            PivotField pf = null;
+            if (pt.getPivotFields().get("Зона") instanceof PivotField) {
+                pf = (PivotField) pt.getPivotFields().get("Зона");
             }
-            System.out.println(i);
+            pf.setAxis(AxisTypes.Row);
+            pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
+            PivotField pf2 = null;
+            if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField) {
+                pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
+            }
+            pf2.setAxis(AxisTypes.Column);
+            pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
+            pt.setBuiltInStyle(PivotBuiltInStyles.PivotStyleMedium10);
+
+            wb2.save();
+
+        } else {
+            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\308.xlsx");
         }
-
-
-
-        //Сводная таблица
-        //CellRange dataRange = sheet3.getCellRange("A1:AH3000");
-        //PivotCache cache = wb.getPivotCaches().add(dataRange);
-        //PivotTable pt = sheet1.getPivotTables().add("Количество по полю ID предмета", sheet1.getCellRange("A3"), cache);
-        //PivotField pf=null;
-        //if (pt.getPivotFields().get("Зона") instanceof PivotField){
-        //    pf= (PivotField) pt.getPivotFields().get("Зона");
-        //}
-        //pf.setAxis(AxisTypes.Row);
-        //pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
-        //PivotField pf2 = null;
-        //if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField){
-        //    pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
-        //}
-        //pf2.setAxis(AxisTypes.Column);
-        //pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
-
-
-
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\308.xlsx");
-
-        //Копирование листа в другой файл
-        Workbook wb2 = new Workbook();
-        wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
-        Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Некорректное размещение груза");
-        Worksheet sheetwork = wb2.getWorksheets().add("1");
-        sheetwork.copyFrom(sheet3);
-
-
-
-        CellRange dataRange = sheetwork.getCellRange("A1:AH3000");
-        PivotCache cache = wb2.getPivotCaches().add(dataRange);
-        PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
-        PivotField pf=null;
-        if (pt.getPivotFields().get("Зона") instanceof PivotField){
-            pf= (PivotField) pt.getPivotFields().get("Зона");
-        }
-        pf.setAxis(AxisTypes.Row);
-        pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
-        PivotField pf2 = null;
-        if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField){
-            pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
-        }
-        pf2.setAxis(AxisTypes.Column);
-        //pf2.setNumberFormat("dd");
-        pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
-        sheetOfWorkbook1.getAllocatedRange().autoFitColumns();
-        wb2.save();
     }
 
+
     @FXML
-    void Error501(MouseEvent event) {
+    void Error501(MouseEvent event) throws UnsupportedAudioFileException, IOException {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 501 ОШИБКИ:
         //Добавить столбец для ВПР
@@ -256,7 +267,56 @@ public class FilterController implements Initializable {
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         filters.filter();
 
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\501.xlsx");
+        if (Check.isSelected()) {
+
+            //Копирование видимых ячеек
+            Worksheet sheet4 = wb.getWorksheets().add("501");
+
+            int index = 0;
+            for (int i = 1; i <= sheet.getRows().length; i++) {
+                if (sheet.getRowIsHide(i)) {
+                    continue;
+                } else {
+                    sheet4.insertRow(index + 1);
+                    sheet.copy(sheet.getRows()[i - 1], sheet4.getRows()[index], true, true, true);
+                    index++;
+                }
+                System.out.println(i);
+            }
+            //Копирование листа в другой файл
+            Workbook wb2 = new Workbook();
+            wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
+            Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Не отправлен из магистрали");
+            Worksheet sheetwork = wb2.getWorksheets().add("501");
+            Worksheet sheet2 = wb2.getWorksheets().add("Задержка отправки груза");
+            Worksheet sheet3 = wb2.getWorksheets().add("Задержка отправки Xdoc");
+            sheetwork.copyFrom(sheet4);
+
+            //Сводная таблица
+            CellRange dataRange = sheetwork.getCellRange("A1:AH"+lastr);;
+            PivotCache cache = wb2.getPivotCaches().add(dataRange);
+            PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
+            PivotField pf = null;
+            if (pt.getPivotFields().get("Текущее место") instanceof PivotField) {
+                pf = (PivotField) pt.getPivotFields().get("Текущее место");
+            }
+            pf.setAxis(AxisTypes.Row);
+            pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
+            PivotField pf2 = null;
+            if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField) {
+                pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
+            }
+            pf2.setAxis(AxisTypes.Column);
+            pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
+            pt.setBuiltInStyle(PivotBuiltInStyles.PivotStyleMedium10);
+
+            wb2.save();
+            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\502.xlsx");
+        } else {
+            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\501.xlsx");
+
+        }
+
     }
 
     @FXML
@@ -266,7 +326,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 304 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -279,6 +340,8 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
+        CellRange range = sheet.getCellRange("M1:M"+lastr);;
+        range.setNumberFormat("dd.mm.yyyy");
         filters.addDateFilter(12, DateTimeGroupingType.Day, current_date.getYear(), current_date.getMonthValue(), current_date.getDayOfMonth(), 0, 0, 0);
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
@@ -290,8 +353,56 @@ public class FilterController implements Initializable {
         filters.customFilter(10, FilterOperatorType.NotEqual,"Зона контроля", true,FilterOperatorType.NotEqual,"Зона возвратов");
         filters.filter();
 
+        if (Check.isSelected()) {
+
+            //Копирование видимых ячеек
+            Worksheet sheet1 = wb.getWorksheets().add("304");
+
+            int index = 0;
+            for (int i = 1; i <= sheet.getRows().length; i++) {
+                if (sheet.getRowIsHide(i)) {
+                    continue;
+                } else {
+                    sheet1.insertRow(index + 1);
+                    sheet.copy(sheet.getRows()[i - 1], sheet1.getRows()[index], true, true, true);
+                    index++;
+                }
+                System.out.println(i);
+            }
+            //Копирование листа в другой файл
+            Workbook wb2 = new Workbook();
+            wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
+            Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Не отправлен из магистрали");
+            Worksheet sheetwork = wb2.getWorksheets().add("304");
+            sheetwork.copyFrom(sheet1);
+
+            //Сводная таблица
+            CellRange dataRange = sheetwork.getCellRange("A1:AH"+lastr);;
+            PivotCache cache = wb2.getPivotCaches().add(dataRange);
+            PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
+            PivotField pf = null;
+            if (pt.getPivotFields().get("Тип") instanceof PivotField) {
+                pf = (PivotField) pt.getPivotFields().get("Тип");
+            }
+            pf.setAxis(AxisTypes.Row);
+            pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
+            PivotField pf2 = null;
+            if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField) {
+                pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
+            }
+            pf2.setAxis(AxisTypes.Column);
+            pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
+            pt.setBuiltInStyle(PivotBuiltInStyles.PivotStyleMedium10);
+
+            wb2.save();
+        } else {
+            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\304.xlsx");
+        }
+
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\304.xlsx");
     }
+
+
 
     @FXML
     void Error201615(MouseEvent event) {
@@ -300,7 +411,9 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        System.out.println(lastr);
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 201/615 ОШИБКИ:
         //Фильтр колонки "Статус"
@@ -313,13 +426,67 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
-        CellRange range = sheet.getCellRange("M1:M30000");
+        CellRange range = sheet.getCellRange("M1:M"+lastr);
         range.setNumberFormat("dd.MM.yyyy");
         java.time.LocalDate current_date1 = java.time.LocalDate.now();
         filters.customFilter(12,FilterOperatorType.NotEqual,current_date1,true,FilterOperatorType.NotEqual,current_date);
         filters.filter();
 
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\201,615.xlsx");
+        if (Check.isSelected()) {
+
+            //Копирование видимых ячеек
+            Worksheet sheet1 = wb.getWorksheets().add("201,615");
+
+            int index = 0;
+            for (int i = 1; i <= sheet.getRows().length; i++) {
+                if (sheet.getRowIsHide(i)) {
+                    continue;
+                } else {
+                    sheet1.insertRow(index + 1);
+                    sheet.copy(sheet.getRows()[i - 1], sheet1.getRows()[index], true, true, true);
+                    index++;
+                }
+                System.out.println(i);
+            }
+            //Копирование листа в другой файл
+            Workbook wb2 = new Workbook();
+            wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
+            Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Found");
+            Worksheet sheetwork = wb2.getWorksheets().add("201,615");
+            sheetwork.copyFrom(sheet1);
+
+            //Сводная таблица
+            CellRange dataRange = sheetwork.getCellRange("A1:AH"+lastr);
+            PivotCache cache = wb2.getPivotCaches().add(dataRange);
+            PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
+            PivotField pf = null;
+            if (pt.getPivotFields().get("Текущее место") instanceof PivotField) {
+                pf = (PivotField) pt.getPivotFields().get("Текущее место");
+            }
+            pf.setAxis(AxisTypes.Row);
+            PivotField pf1 = null;
+            if (pt.getPivotFields().get("Тип") instanceof PivotField) {
+                pf1 = (PivotField) pt.getPivotFields().get("Тип");
+            }
+            pf1.setAxis(AxisTypes.Row);
+            pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
+            PivotField pf2 = null;
+            if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField) {
+                pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
+            }
+            pf2.setAxis(AxisTypes.Column);
+            pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
+            PivotField pf3 = null;
+            if (pt.getPivotFields().get("Поток") instanceof PivotField) {
+                pf3 = (PivotField) pt.getPivotFields().get("Поток");
+            }
+            pf3.setAxis(AxisTypes.Page);
+            pt.setBuiltInStyle(PivotBuiltInStyles.PivotStyleMedium10);
+
+            wb2.save();
+        } else {
+            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\201,615.xlsx");
+        }
 
     }
 
@@ -330,7 +497,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 106 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -353,7 +521,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 307 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -382,7 +551,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 601 ОШИБКИ:
         //Фильтр колонки "Статус"
@@ -416,7 +586,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileCh);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 30000, 34));
+        int lastr = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 627 ОШИБКИ:
         //Фильтр колонки "Тип"
@@ -429,13 +600,65 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual," ");
         //Фильтр колонки "Дата прихода"
-        CellRange range = sheet.getCellRange("M1:M30000");
+        CellRange range = sheet.getCellRange("M1:M"+lastr);
         range.setNumberFormat("dd.MM.yyyy");
         java.time.LocalDate current_date1 = java.time.LocalDate.now();
         filters.customFilter(12,FilterOperatorType.NotEqual,current_date1);
         filters.filter();
 
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\627.xlsx");
+        if (Check.isSelected()) {
+
+            //Копирование видимых ячеек
+            Worksheet sheet1 = wb.getWorksheets().add("627");
+
+            int index = 0;
+            for (int i = 1; i <= sheet.getRows().length; i++) {
+                if (sheet.getRowIsHide(i)) {
+                    continue;
+                } else {
+                    sheet1.insertRow(index + 1);
+                    sheet.copy(sheet.getRows()[i - 1], sheet1.getRows()[index], true, true, true);
+                    index++;
+                }
+                System.out.println(i);
+            }
+            //Копирование листа в другой файл
+            Workbook wb2 = new Workbook();
+            wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatdate.format(newdate) + ".xlsx");
+            Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Необработанные ТМ");
+            Worksheet sheetwork = wb2.getWorksheets().add("627");
+            Worksheet sheetwork1 = wb2.getWorksheets().add("Проверенные груза");
+
+            sheetwork.copyFrom(sheet1);
+
+            //Сводная таблица
+            CellRange dataRange = sheetwork.getCellRange("A1:AH"+lastr);;
+            PivotCache cache = wb2.getPivotCaches().add(dataRange);
+            PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
+            PivotField pf = null;
+            if (pt.getPivotFields().get("Тип") instanceof PivotField) {
+                pf = (PivotField) pt.getPivotFields().get("Тип");
+            }
+            PivotField pf1 = null;
+            if (pt.getPivotFields().get("Текущее место") instanceof PivotField) {
+                pf1 = (PivotField) pt.getPivotFields().get("Текущее место");
+            }
+            pf.setAxis(AxisTypes.Row);
+            pf1.setAxis(AxisTypes.Row);
+            pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
+            PivotField pf2 = null;
+            if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField) {
+                pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
+            }
+            pf2.setAxis(AxisTypes.Column);
+            pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
+            pt.setBuiltInStyle(PivotBuiltInStyles.PivotStyleMedium10);
+
+            wb2.save();
+        } else {
+            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\627.xlsx");
+        }
+
     }
 
     @FXML
