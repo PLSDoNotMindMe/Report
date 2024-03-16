@@ -13,7 +13,11 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 <junit.version>5.10.0</junit.version>  </properties>
 
+
   <dependencies>
+
+
+
     <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-controls</artifactId>
@@ -24,6 +28,7 @@
       <artifactId>javafx-fxml</artifactId>
       <version>21</version>
     </dependency>
+
 <dependency>
       <groupId>org.openjfx</groupId>
       <artifactId>javafx-web</artifactId>
@@ -43,6 +48,7 @@
       <artifactId>controlsfx</artifactId>
       <version>11.1.2</version>
     </dependency><dependency>
+
       <groupId>com.dlsc.formsfx</groupId>
       <artifactId>formsfx-core</artifactId>
       <version>11.6.0</version>
@@ -52,7 +58,15 @@
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
-    </dependency><dependency>
+    </dependency>
+
+    <dependency>
+      <groupId>e-iceblue</groupId>
+      <artifactId>spire.xls.free</artifactId>
+      <version>5.1.0</version>
+    </dependency>
+
+    <dependency>
       <groupId>net.synedra</groupId>
       <artifactId>validatorfx</artifactId>
       <version>0.4.0</version>

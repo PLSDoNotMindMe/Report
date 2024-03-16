@@ -11,6 +11,8 @@ module org.example.report {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires spire.xls;
+    requires annotations;
+    requires java.desktop;
 
     opens org.example.report to javafx.fxml;
     exports org.example.report;
