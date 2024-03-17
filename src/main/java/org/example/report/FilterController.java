@@ -119,23 +119,23 @@ public class FilterController implements Initializable {
         file.getAbsoluteFile();
         fileError = String.valueOf(file);
         Workbook wb = new Workbook();
-        wb.loadFromFile(fileError, ",");
+        wb.loadFromFile(fileError, ",", 1, 1);
         Worksheet sheet = wb.getWorksheets().get(0);
-        CellRange usedRange = sheet.getAllocatedRange();
-        usedRange.setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
-
-        CellRange range = sheet.getCellRange("M1:M40000");
+        int lastRow = sheet.getLastRow();
+        sheet.getCellRange("A1:V" + lastRow).setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
+        CellRange range = sheet.getCellRange("M1:M" + lastRow);
         range.setNumberFormat("dd.mm.yyyy");
         //Перенос текста по столбцам и применение автофильтра
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, 40000, 22));
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 22));
         //Фильтр колонки "Статус"
-        filters.addFilter(6, "Сформирован");
+        //filters.addFilter(6, "Сформирован");
         //Фильтр колонки "Завершили формирование"
         if (currentDate == null) {
             currentDate = LocalDate.now();
         }
-        filters.customFilter(12, FilterOperatorType.NotEqual, currentDate, true, FilterOperatorType.NotEqual, "");
+        filters.customFilter(12, FilterOperatorType.NotEqual, currentDate, false, FilterOperatorType.NotEqual, "");
+        System.out.println(currentDate);
         filters.filter();
 
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\503.xlsx");
