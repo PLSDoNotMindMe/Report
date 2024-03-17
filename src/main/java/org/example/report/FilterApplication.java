@@ -11,12 +11,10 @@ public class FilterApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(FilterApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 400, 380);
+        Scene scene = new Scene(fxmlLoader.load(), 400, 333);
         stage.setTitle("Работа с отчётом");
         stage.setScene(scene);
         stage.show();
-        System.out.println();
-        System.out.println();
     }
 
 
