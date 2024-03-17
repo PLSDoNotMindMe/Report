@@ -134,8 +134,7 @@ public class FilterController implements Initializable {
         if (currentDate == null) {
             currentDate = LocalDate.now();
         }
-        filters.customFilter(12, FilterOperatorType.NotEqual, currentDate, false, FilterOperatorType.NotEqual, "");
-        System.out.println(currentDate);
+        filters.customFilter(12, FilterOperatorType.NotEqual, currentDate, true, FilterOperatorType.NotEqual, "");
         filters.filter();
 
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\503.xlsx");
