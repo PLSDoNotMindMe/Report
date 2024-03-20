@@ -47,15 +47,6 @@ public class FilterController implements Initializable {
     private Label nameOut;
 
     @FXML
-    void name(MouseEvent event) {
-
-    }
-
-    @FXML
-    private Label ErrorChoose;
-
-
-    @FXML
     void CheckPt(ActionEvent event) {
 
     }
