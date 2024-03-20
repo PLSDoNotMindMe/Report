@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
@@ -22,6 +24,14 @@ import java.util.ResourceBundle;
 
 public class FilterController implements Initializable {
 
+    public void fileCheck() {
+            Path path = Path.of("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
+            if (Files.notExists(path)) {
+                Workbook wb = new Workbook();
+                wb.getWorksheets().clear();
+                wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
+            }
+    }
 
     FileChooser fileChooser = new FileChooser();
     String fileChoose;
@@ -83,28 +93,6 @@ public class FilterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fileChooser.setInitialDirectory(new File("C:\\Users\\" + user + "\\Downloads"));
-    }
-
-    @FXML
-    void createFile(MouseEvent event) {
-        Workbook wb = new Workbook();
-        wb.getWorksheets().clear();
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
-    }
-
-
-    @FXML
-    void createFolder(MouseEvent event) {
-        File f = new File("C:\\Users\\" + user + "\\Desktop\\Ошибки");
-        try {
-            if (f.mkdir()) {
-                System.out.println("Directory Created");
-            } else {
-                System.out.println("Directory is not created");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @FXML
@@ -173,7 +161,7 @@ public class FilterController implements Initializable {
         filters.filter();
 
         if (Check.isSelected()) {
-
+            fileCheck();
             //Копирование видимых ячеек
             Worksheet sheet3 = wb.getWorksheets().add("308");
             int index = 0;
@@ -259,7 +247,7 @@ public class FilterController implements Initializable {
         filters.filter();
 
         if (Check.isSelected()) {
-
+            fileCheck();
             //Копирование видимых ячеек
             Worksheet sheet4 = wb.getWorksheets().add("501");
 

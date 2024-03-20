@@ -9,30 +9,28 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="333.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.report.FilterController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.report.FilterController">
    <children>
-      <ToolBar layoutY="1.0" prefHeight="99.0" prefWidth="400.0" />
-      <Button fx:id="error2" layoutX="51.0" layoutY="148.0" onMouseClicked="#Error501" prefHeight="25.0" prefWidth="86.0" text="501" />
-      <Button fx:id="error9" layoutX="51.0" layoutY="183.0" mnemonicParsing="false" onMouseClicked="#Error503" prefHeight="25.0" prefWidth="86.0" text="503" />
-      <Button layoutX="51.0" layoutY="219.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="701" />
-      <Button fx:id="error3" layoutX="51.0" layoutY="255.0" mnemonicParsing="false" onMouseClicked="#Error304" prefHeight="25.0" prefWidth="86.0" text="304" />
-      <Button fx:id="error4" layoutX="51.0" layoutY="291.0" mnemonicParsing="false" onMouseClicked="#Error201615" prefHeight="25.0" prefWidth="86.0" text="201/615" />
-      <Button fx:id="error5" layoutX="268.0" layoutY="148.0" mnemonicParsing="false" onMouseClicked="#Error106" prefHeight="25.0" prefWidth="86.0" text="106" />
-      <Button fx:id="error1" layoutX="268.0" layoutY="183.0" mnemonicParsing="false" onMouseClicked="#Error308" prefHeight="25.0" prefWidth="86.0" text="308" />
-      <Button fx:id="error6" layoutX="268.0" layoutY="219.0" mnemonicParsing="false" onMouseClicked="#Error307" prefHeight="25.0" prefWidth="86.0" text="307" />
-      <Button fx:id="error8" layoutX="268.0" layoutY="255.0" mnemonicParsing="false" onMouseClicked="#Error627" prefHeight="25.0" prefWidth="86.0" text="627" />
-      <Button fx:id="Folder" layoutX="311.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#createFolder" prefHeight="25.0" prefWidth="86.0" text="Папка" />
-      <Button fx:id="tran" layoutX="244.0" layoutY="291.0" mnemonicParsing="false" onMouseClicked="#Transit" prefHeight="25.0" prefWidth="134.0" text="Транзитные коробки" />
-      <Button fx:id="choose" layoutX="36.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#chooseFile" text="Открыть файл стока" />
-      <Label fx:id="nameOut" alignment="CENTER" contentDisplay="CENTER" layoutX="9.0" layoutY="109.0" prefHeight="25.0" prefWidth="382.0" textAlignment="CENTER">
+      <ToolBar prefHeight="77.0" prefWidth="400.0" />
+      <Button fx:id="error2" layoutX="57.0" layoutY="117.0" onMouseClicked="#Error501" prefHeight="25.0" prefWidth="86.0" text="501" />
+      <Button fx:id="error9" layoutX="57.0" layoutY="152.0" mnemonicParsing="false" onMouseClicked="#Error503" prefHeight="25.0" prefWidth="86.0" text="503" />
+      <Button layoutX="57.0" layoutY="188.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="86.0" text="701" />
+      <Button fx:id="error3" layoutX="57.0" layoutY="224.0" mnemonicParsing="false" onMouseClicked="#Error304" prefHeight="25.0" prefWidth="86.0" text="304" />
+      <Button fx:id="error4" layoutX="57.0" layoutY="260.0" mnemonicParsing="false" onMouseClicked="#Error201615" prefHeight="25.0" prefWidth="86.0" text="201/615" />
+      <Button fx:id="error5" layoutX="258.0" layoutY="117.0" mnemonicParsing="false" onMouseClicked="#Error106" prefHeight="25.0" prefWidth="86.0" text="106" />
+      <Button fx:id="error1" layoutX="258.0" layoutY="152.0" mnemonicParsing="false" onMouseClicked="#Error308" prefHeight="25.0" prefWidth="86.0" text="308" />
+      <Button fx:id="error6" layoutX="258.0" layoutY="188.0" mnemonicParsing="false" onMouseClicked="#Error307" prefHeight="25.0" prefWidth="86.0" text="307" />
+      <Button fx:id="error8" layoutX="258.0" layoutY="224.0" mnemonicParsing="false" onMouseClicked="#Error627" prefHeight="25.0" prefWidth="86.0" text="627" />
+      <Button fx:id="tran" layoutX="234.0" layoutY="260.0" mnemonicParsing="false" onMouseClicked="#Transit" prefHeight="25.0" prefWidth="134.0" text="Транзитные коробки" />
+      <Button fx:id="choose" layoutX="33.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#chooseFile" prefHeight="25.0" prefWidth="134.0" text="Открыть файл стока" />
+      <Label fx:id="nameOut" alignment="CENTER" contentDisplay="CENTER" layoutX="9.0" layoutY="82.0" prefHeight="25.0" prefWidth="382.0" textAlignment="CENTER">
          <font>
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Button fx:id="newfile" layoutX="206.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#createFile" prefHeight="25.0" prefWidth="86.0" text="Файл" />
-      <Separator fx:id="seperator1" layoutX="200.0" layoutY="7.0" orientation="VERTICAL" prefHeight="86.0" prefWidth="3.0" />
-      <CheckBox fx:id="Check" layoutX="36.0" layoutY="66.0" mnemonicParsing="false" onAction="#CheckPt" text="Сводная таблица" />
-      <DatePicker fx:id="myDatePicker" layoutX="220.0" layoutY="62.0" onAction="#getDate" prefHeight="25.0" prefWidth="163.0" promptText="Дата проверки" />
-      <Separator fx:id="seperator11" layoutX="200.0" layoutY="147.0" orientation="VERTICAL" prefHeight="177.0" prefWidth="6.0" />
+      <Separator fx:id="seperator1" layoutX="200.0" layoutY="7.0" orientation="VERTICAL" prefHeight="63.0" prefWidth="6.0" />
+      <CheckBox fx:id="Check" layoutX="14.0" layoutY="50.0" mnemonicParsing="false" onAction="#CheckPt" text="Сводная таблица" />
+      <DatePicker fx:id="myDatePicker" layoutX="234.0" layoutY="26.0" onAction="#getDate" prefHeight="25.0" prefWidth="134.0" promptText="Дата проверки" />
+      <Separator fx:id="seperator11" layoutX="200.0" layoutY="112.0" orientation="VERTICAL" prefHeight="177.0" prefWidth="6.0" />
    </children>
 </AnchorPane>
