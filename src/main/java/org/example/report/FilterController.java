@@ -650,6 +650,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Наименование"
         //filters.customFilter(1,FilterOperatorType.);
         filters.filter();
+        System.out.println();
 
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Транзитные коробки.xlsx");
 
