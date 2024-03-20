@@ -124,16 +124,15 @@ public class FilterController implements Initializable {
 
     }
 
-
     @FXML
-    void Error308(MouseEvent event) {
-        //Создание документа, установка автофильтра
+    void Error308(MouseEvent event) throws FileNotFoundException {
         Workbook wb = new Workbook();
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         int lastRow = sheet.getLastRow();
         filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
+        //Создание документа, установка автофильтра
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 308 ОШИБКИ:
         //Фильтр колонки "Статус"
         filters.addFilter(2, "Сформирован");
@@ -339,6 +338,7 @@ public class FilterController implements Initializable {
         filters.filter();
 
         if (Check.isSelected()) {
+            fileCheck();
 
             //Копирование видимых ячеек
             Worksheet sheet1 = wb.getWorksheets().add("304");
@@ -419,7 +419,7 @@ public class FilterController implements Initializable {
         filters.filter();
 
         if (Check.isSelected()) {
-
+            fileCheck();
             //Копирование видимых ячеек
             Worksheet sheet1 = wb.getWorksheets().add("201,615");
 
@@ -564,6 +564,7 @@ public class FilterController implements Initializable {
         filters.filter();
 
         if (Check.isSelected()) {
+            fileCheck();
 
             //Копирование видимых ячеек
             Worksheet sheet1 = wb.getWorksheets().add("627");
