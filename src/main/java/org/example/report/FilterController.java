@@ -12,7 +12,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
@@ -43,7 +42,6 @@ public class FilterController implements Initializable {
     public FilterController() throws FileNotFoundException {
     }
 
-
     @FXML
     void name(MouseEvent event) {
 
@@ -69,8 +67,7 @@ public class FilterController implements Initializable {
 
     @FXML
     void getDate(ActionEvent event) {
-        LocalDate myDate = myDatePicker.getValue();
-        currentDate = myDate;
+        currentDate = myDatePicker.getValue();
     }
 
     @FXML
@@ -98,7 +95,6 @@ public class FilterController implements Initializable {
 
     @FXML
     void createFolder(MouseEvent event) {
-        user = System.getProperty("user.name");
         File f = new File("C:\\Users\\" + user + "\\Desktop\\Ошибки");
         try {
             if (f.mkdir()) {
@@ -109,7 +105,6 @@ public class FilterController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println(currentDate);
     }
 
     @FXML
@@ -129,12 +124,12 @@ public class FilterController implements Initializable {
         AutoFiltersCollection filters = sheet.getAutoFilters();
         filters.setRange(sheet.getCellRange(1, 1, lastRow, 22));
         //Фильтр колонки "Статус"
-        //filters.addFilter(6, "Сформирован");
+        filters.addFilter(1, "Сформирован");
         //Фильтр колонки "Завершили формирование"
         if (currentDate == null) {
             currentDate = LocalDate.now();
         }
-        filters.customFilter(12, FilterOperatorType.NotEqual, currentDate, true, FilterOperatorType.NotEqual, "");
+        filters.customFilter(2, FilterOperatorType.NotEqual, formatDate.format(currentDate), true, FilterOperatorType.NotEqual, "");
         filters.filter();
 
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\503.xlsx");
@@ -228,14 +223,14 @@ public class FilterController implements Initializable {
 
 
     @FXML
-    void Error501(MouseEvent event) throws UnsupportedAudioFileException, IOException {
+    void Error501(MouseEvent event) {
         //Создание документа, установка автофильтра
         Workbook wb = new Workbook();
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastr = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
+        int lastRow = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 501 ОШИБКИ:
         //Добавить столбец для ВПР
@@ -289,7 +284,7 @@ public class FilterController implements Initializable {
             sheetwork.copyFrom(sheet4);
 
             //Сводная таблица
-            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastr);
+            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
             ;
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
@@ -323,8 +318,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastr = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
+        int lastRow = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 304 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -337,7 +332,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual, " ");
         //Фильтр колонки "Дата прихода"
-        CellRange range = sheet.getCellRange("M1:M" + lastr);
+        CellRange range = sheet.getCellRange("M1:M" + lastRow);
         ;
         range.setNumberFormat("dd.mm.yyyy");
         if (currentDate == null) {
@@ -379,7 +374,7 @@ public class FilterController implements Initializable {
             sheetwork.copyFrom(sheet1);
 
             //Сводная таблица
-            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastr);
+            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
             ;
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
@@ -411,9 +406,9 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastr = sheet.getLastRow();
-        System.out.println(lastr);
-        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
+        int lastRow = sheet.getLastRow();
+        System.out.println(lastRow);
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 201/615 ОШИБКИ:
         //Фильтр колонки "Статус"
@@ -426,7 +421,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual, " ");
         //Фильтр колонки "Дата прихода"
-        CellRange range = sheet.getCellRange("M1:M" + lastr);
+        CellRange range = sheet.getCellRange("M1:M" + lastRow);
         range.setNumberFormat("dd.MM.yyyy");
         if (currentDate == null) {
             currentDate = LocalDate.now();
@@ -459,7 +454,7 @@ public class FilterController implements Initializable {
             sheetwork.copyFrom(sheet1);
 
             //Сводная таблица
-            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastr);
+            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
             PivotField pf = null;
@@ -500,8 +495,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastr = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
+        int lastRow = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 106 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -524,8 +519,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastr = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
+        int lastRow = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 307 ОШИБКИ:
         //Фильтр колонки "Контейнер (груз)"
@@ -558,8 +553,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastr = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
+        int lastRow = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
 
         //ПРИМЕНЕНИЕ ФИЛЬТРОВ 627 ОШИБКИ:
         //Фильтр колонки "Тип"
@@ -572,7 +567,7 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Цена"
         filters.customFilter(9, FilterOperatorType.NotEqual, " ");
         //Фильтр колонки "Дата прихода"
-        CellRange range = sheet.getCellRange("M1:M" + lastr);
+        CellRange range = sheet.getCellRange("M1:M" + lastRow);
         range.setNumberFormat("dd.MM.yyyy");
         if (currentDate == null) {
             currentDate = LocalDate.now();
@@ -606,7 +601,7 @@ public class FilterController implements Initializable {
             sheetwork.copyFrom(sheet1);
 
             //Сводная таблица
-            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastr);
+            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
             ;
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
@@ -643,8 +638,8 @@ public class FilterController implements Initializable {
         wb.loadFromFile(fileChoose);
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastr = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastr, 34));
+        int lastRow = sheet.getLastRow();
+        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Транзитная коробка");
         //Фильтр колонки "Наименование"
