@@ -21,7 +21,7 @@
       <Button fx:id="error1" layoutX="268.0" layoutY="183.0" mnemonicParsing="false" onMouseClicked="#Error308" prefHeight="25.0" prefWidth="86.0" text="308" />
       <Button fx:id="error6" layoutX="268.0" layoutY="219.0" mnemonicParsing="false" onMouseClicked="#Error307" prefHeight="25.0" prefWidth="86.0" text="307" />
       <Button fx:id="error8" layoutX="268.0" layoutY="255.0" mnemonicParsing="false" onMouseClicked="#Error627" prefHeight="25.0" prefWidth="86.0" text="627" />
-      <Button fx:id="Folder" layoutX="248.0" layoutY="62.0" mnemonicParsing="false" onMouseClicked="#createFolder" prefHeight="25.0" prefWidth="95.0" text="Создать папку" />
+      <Button fx:id="Folder" layoutX="311.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#createFolder" prefHeight="25.0" prefWidth="86.0" text="Папка" />
       <Button fx:id="tran" layoutX="244.0" layoutY="291.0" mnemonicParsing="false" onMouseClicked="#Transit" prefHeight="25.0" prefWidth="134.0" text="Транзитные коробки" />
       <Button fx:id="choose" layoutX="36.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#chooseFile" text="Открыть файл стока" />
       <Label fx:id="nameOut" alignment="CENTER" contentDisplay="CENTER" layoutX="9.0" layoutY="109.0" prefHeight="25.0" prefWidth="382.0" textAlignment="CENTER">
@@ -29,10 +29,10 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Button fx:id="newfile" layoutX="248.0" layoutY="38.0" mnemonicParsing="false" onMouseClicked="#createFile" prefHeight="25.0" prefWidth="95.0" text="Создать файл" />
+      <Button fx:id="newfile" layoutX="206.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#createFile" prefHeight="25.0" prefWidth="86.0" text="Файл" />
       <Separator fx:id="seperator1" layoutX="200.0" layoutY="7.0" orientation="VERTICAL" prefHeight="86.0" prefWidth="3.0" />
       <CheckBox fx:id="Check" layoutX="36.0" layoutY="66.0" mnemonicParsing="false" onAction="#CheckPt" text="Сводная таблица" />
-      <DatePicker fx:id="myDatePicker" layoutX="215.0" layoutY="14.0" onAction="#getDate" prefHeight="25.0" prefWidth="163.0" promptText="Дата проверки" />
+      <DatePicker fx:id="myDatePicker" layoutX="220.0" layoutY="62.0" onAction="#getDate" prefHeight="25.0" prefWidth="163.0" promptText="Дата проверки" />
       <Separator fx:id="seperator11" layoutX="200.0" layoutY="147.0" orientation="VERTICAL" prefHeight="177.0" prefWidth="6.0" />
    </children>
 </AnchorPane>

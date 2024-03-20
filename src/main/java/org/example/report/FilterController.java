@@ -648,9 +648,8 @@ public class FilterController implements Initializable {
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Транзитная коробка");
         //Фильтр колонки "Наименование"
-        //filters.customFilter(1,FilterOperatorType.);
+        filters.customFilter(1,FilterOperatorType.Equal,"sr*");
         filters.filter();
-        System.out.println();
 
         wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Транзитные коробки.xlsx");
 
