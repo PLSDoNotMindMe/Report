@@ -28,8 +28,17 @@ public class FilterController implements Initializable {
     static String fileChoose;
     static LocalDate currentDate;
     String user = System.getProperty("user.name");
-    static boolean checkChek;
+    static boolean isCheck;
     DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    public LocalDate dateCurrent() {
+      return currentDate;
+    }
+    public String choosenFile() {
+       return fileChoose;
+    }
+    public boolean checkPivot() {
+        return isCheck;
+    }
 
     @FXML
     public CheckBox Check;
@@ -43,13 +52,8 @@ public class FilterController implements Initializable {
     }
 
     @FXML
-    private Button newfile;
-
-    @FXML
     private Label ErrorChoose;
 
-    @FXML
-    private Separator seperator1;
 
     @FXML
     void CheckPt(ActionEvent event) {
@@ -70,7 +74,7 @@ public class FilterController implements Initializable {
 
     @FXML
     public void getDate(ActionEvent event) {
-     this.currentDate = myDatePicker.getValue();}
+     currentDate = myDatePicker.getValue();}
     @FXML
     public void chooseFile(MouseEvent event) {
         File file = fileChooser.showOpenDialog(new Stage());
@@ -117,9 +121,9 @@ public class FilterController implements Initializable {
     @FXML
     void Error308(MouseEvent event) throws FileNotFoundException {
         if (Check.isSelected()) {
-            checkChek = true;
+            isCheck = true;
         } else {
-            checkChek = false;
+            isCheck = false;
         }
         Report_308 object = new Report_308();
         object.createReport_308();

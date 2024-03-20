@@ -13,7 +13,7 @@ public class Report_308 {
         FilterController filterController = new FilterController();
 
         Workbook wb = new Workbook();
-        wb.loadFromFile(filterController.fileChoose);
+        wb.loadFromFile(filterController.choosenFile());
         Worksheet sheet = wb.getWorksheets().get(0);
         AutoFiltersCollection filters = sheet.getAutoFilters();
         int lastRow = sheet.getLastRow();
@@ -34,16 +34,13 @@ public class Report_308 {
         //Фильтр колонки "Дата прихода"
         CellRange range = sheet.getCellRange("M1:M" + lastRow);
         range.setNumberFormat("dd.mm.yyyy");
-        if (filterController.currentDate == null) {
-            filterController.currentDate = LocalDate.now();
-        }
-        LocalDate currenDateMinus = filterController.currentDate.minusDays(1);
+        LocalDate currenDateMinus = filterController.dateCurrent().minusDays(1);
         filters.addDateFilter(12, DateTimeGroupingType.Day, currenDateMinus.getYear(), currenDateMinus.getMonthValue(), currenDateMinus.getDayOfMonth(), 0, 0, 0);
         //Фильтр колонки "В перевозке"
         filters.addFilter(27, "Нет");
         filters.filter();
 
-        if (filterController.checkChek == true) {
+        if (filterController.checkPivot()) {
             filterController.fileCheck();
             //Копирование видимых ячеек
             Worksheet sheet3 = wb.getWorksheets().add("308");
@@ -61,7 +58,7 @@ public class Report_308 {
 
             //Копирование листа в другой файл
             Workbook wb2 = new Workbook();
-            wb2.loadFromFile("C:\\Users\\" + filterController.user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + filterController.formatDate.format(filterController.currentDate) + ".xlsx");
+            wb2.loadFromFile("C:\\Users\\" + filterController.user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + filterController.formatDate.format(FilterController.currentDate) + ".xlsx");
             Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Некорректное размещение груза");
             Worksheet sheetwork = wb2.getWorksheets().add("308");
             sheetwork.copyFrom(sheet3);
