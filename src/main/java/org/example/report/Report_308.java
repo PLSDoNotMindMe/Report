@@ -68,7 +68,6 @@ public class Report_308 {
 
             //Сводная таблица
             CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
-            ;
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
             PivotField pf = null;
