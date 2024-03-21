@@ -160,24 +160,10 @@ public class FilterController implements Initializable {
     }
 
     @FXML
-    void Transit(MouseEvent event) {
-        //Создание документа, установка автофильтра
-        Workbook wb = new Workbook();
-        wb.loadFromFile(fileChoose);
-        Worksheet sheet = wb.getWorksheets().get(0);
-        AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastRow = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
-        //Фильтр колонки "Тип"
-        filters.addFilter(3, "Транзитная коробка");
-        //Фильтр колонки "Наименование"
-        filters.customFilter(1,FilterOperatorType.Equal,"sr*");
-        filters.filter();
-
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Транзитные коробки.xlsx");
-
+    void Transit(MouseEvent event) throws FileNotFoundException {
+       Report_Transit object = new Report_Transit();
+       object.createReport_Transit();
     }
-
 
 }
 
