@@ -18,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
 import java.util.ResourceBundle;
 
 
@@ -30,6 +29,7 @@ public class FilterController implements Initializable {
     String user = System.getProperty("user.name");
     static boolean isCheck;
     DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
     public LocalDate dateCurrent() {
       return currentDate;
     }
@@ -39,21 +39,6 @@ public class FilterController implements Initializable {
     public boolean checkPivot() {
         return isCheck;
     }
-
-    @FXML
-    public CheckBox Check;
-
-    @FXML
-    private Label nameOut;
-
-    @FXML
-    void CheckPt(ActionEvent event) {
-
-    }
-
-    @FXML
-    public DatePicker myDatePicker;
-
     public void fileCheck() {
         Path path = Path.of("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
         if (Files.notExists(path)) {
@@ -62,10 +47,9 @@ public class FilterController implements Initializable {
             wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
         }
     }
-
     @FXML
     public void getDate(ActionEvent event) {
-     currentDate = myDatePicker.getValue();}
+        currentDate = myDatePicker.getValue();}
     @FXML
     public void chooseFile(MouseEvent event) {
         File file = fileChooser.showOpenDialog(new Stage());
@@ -74,38 +58,50 @@ public class FilterController implements Initializable {
         String fileName = file.getName();
         nameOut.setText(fileName);
     }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fileChooser.setInitialDirectory(new File("C:\\Users\\" + user + "\\Downloads"));
     }
+    @FXML
+    void CheckPt(ActionEvent event) {
+
+    }
+
+    @FXML
+    public CheckBox Check;
+
+    @FXML
+    private Label nameOut;
+
+    @FXML
+    public DatePicker myDatePicker;
 
     @FXML
     void Error503(MouseEvent event) {
-        //Выбор файла, создание документа
-        File file = fileChooser.showOpenDialog(new Stage());
-        file.getAbsoluteFile();
-        String fileChoose = String.valueOf(file);
-        Workbook wb = new Workbook();
-        wb.loadFromFile(fileChoose, ",", 1, 1);
-        Worksheet sheet = wb.getWorksheets().get(0);
-        int lastRow = sheet.getLastRow();
-        sheet.getCellRange("A1:V" + lastRow).setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
-        CellRange range = sheet.getCellRange("M1:M" + lastRow);
-        range.setNumberFormat("dd.mm.yyyy");
-        //Перенос текста по столбцам и применение автофильтра
-        AutoFiltersCollection filters = sheet.getAutoFilters();
-        filters.setRange(sheet.getCellRange(1, 1, lastRow, 22));
-        //Фильтр колонки "Статус"
-        filters.addFilter(1, "Сформирован");
-        //Фильтр колонки "Завершили формирование"
-        if (currentDate == null) {
-            currentDate = LocalDate.now();
-        }
-        filters.customFilter(2, FilterOperatorType.NotEqual, formatDate.format(currentDate), true, FilterOperatorType.NotEqual, "");
-        filters.filter();
-
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\503.xlsx");
+//        //Выбор файла, создание документа
+//        File file = fileChooser.showOpenDialog(new Stage());
+//        file.getAbsoluteFile();
+//        String fileChoose = String.valueOf(file);
+//        Workbook wb = new Workbook();
+//        wb.loadFromFile(fileChoose, ",", 1, 1);
+//        Worksheet sheet = wb.getWorksheets().get(0);
+//        int lastRow = sheet.getLastRow();
+//        sheet.getCellRange("A1:V" + lastRow).setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
+//        CellRange range = sheet.getCellRange("M1:M" + lastRow);
+//        range.setNumberFormat("dd.mm.yyyy");
+//        //Перенос текста по столбцам и применение автофильтра
+//        AutoFiltersCollection filters = sheet.getAutoFilters();
+//        filters.setRange(sheet.getCellRange(1, 1, lastRow, 22));
+//        //Фильтр колонки "Статус"
+//        filters.addFilter(1, "Сформирован");
+//        //Фильтр колонки "Завершили формирование"
+//        if (currentDate == null) {
+//            currentDate = LocalDate.now();
+//        }
+//        filters.customFilter(2, FilterOperatorType.NotEqual, formatDate.format(currentDate), true, FilterOperatorType.NotEqual, "");
+//        filters.filter();
+//
+//        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\503.xlsx");
 
     }
 
@@ -120,94 +116,15 @@ public class FilterController implements Initializable {
         object.createReport_308();
     }
 
-
     @FXML
-    void Error501(MouseEvent event) {
-        //Создание документа, установка автофильтра
-        Workbook wb = new Workbook();
-        wb.loadFromFile(fileChoose);
-        Worksheet sheet = wb.getWorksheets().get(0);
-        AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastRow = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
-
-        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 501 ОШИБКИ:
-        //Добавить столбец для ВПР
-        sheet.insertColumn(34);
-        sheet.get(1, 34).setValue("ВПР");
-        sheet.get(1, 33).get(String.format("AH1")).setStyle(sheet.get(1, 34).get(String.format("AG1")).getStyle());
-        sheet.get(1, 34).autoFitColumns();
-        //Фильтр колонки "Тип"
-        filters.addFilter(3, "Отправление");
-        //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "");
-        //Фильтр колонки "Поток"
-        filters.addFilter(16, "Прямой");
-        //Фильтр колонки "Транзит"
-        filters.addFilter(17, "Транзитный пункт");
-        //Фильтр колонки "В перевозке"
-        filters.addFilter(27, "Нет");
-        //Фильтр колонки "Сортировочный центр"
-        filters.customFilter(23, FilterOperatorType.NotEqual, "СПБ_ТСЦ_Шушары");
-        //Фильтр колонки "Дата прихода"
-        if (currentDate == null) {
-            currentDate = LocalDate.now();
-        }
-        LocalDate currenDateMinus = currentDate.minusDays(1);
-        filters.addDateFilter(12, DateTimeGroupingType.Day, currenDateMinus.getYear(), currenDateMinus.getMonthValue(), currenDateMinus.getDayOfMonth(), 0, 0, 0);
-        filters.filter();
-
+    void Error501(MouseEvent event) throws FileNotFoundException{
         if (Check.isSelected()) {
-            fileCheck();
-            //Копирование видимых ячеек
-            Worksheet sheet4 = wb.getWorksheets().add("501");
-
-            int index = 0;
-            for (int i = 1; i <= sheet.getRows().length; i++) {
-                if (sheet.getRowIsHide(i)) {
-                    continue;
-                } else {
-                    sheet4.insertRow(index + 1);
-                    sheet.copy(sheet.getRows()[i - 1], sheet4.getRows()[index], true, true, true);
-                    index++;
-                }
-                System.out.println(i);
-            }
-            //Копирование листа в другой файл
-            Workbook wb2 = new Workbook();
-            wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
-            Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Не отправлен из магистрали");
-            Worksheet sheetwork = wb2.getWorksheets().add("501");
-            Worksheet sheet2 = wb2.getWorksheets().add("Задержка отправки груза");
-            Worksheet sheet3 = wb2.getWorksheets().add("Задержка отправки Xdoc");
-            sheetwork.copyFrom(sheet4);
-
-            //Сводная таблица
-            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
-            ;
-            PivotCache cache = wb2.getPivotCaches().add(dataRange);
-            PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
-            PivotField pf = null;
-            if (pt.getPivotFields().get("Текущее место") instanceof PivotField) {
-                pf = (PivotField) pt.getPivotFields().get("Текущее место");
-            }
-            pf.setAxis(AxisTypes.Row);
-            pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
-            PivotField pf2 = null;
-            if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField) {
-                pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
-            }
-            pf2.setAxis(AxisTypes.Column);
-            pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
-            pt.setBuiltInStyle(PivotBuiltInStyles.PivotStyleMedium10);
-
-            wb2.save();
-            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\502.xlsx");
+            isCheck = true;
         } else {
-            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\501.xlsx");
-
+            isCheck = false;
         }
-
+        Report_501 object = new Report_501();
+        object.createReport_501();
     }
 
     @FXML
@@ -297,7 +214,6 @@ public class FilterController implements Initializable {
             wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\304.xlsx");
         }
     }
-
 
     @FXML
     void Error201615(MouseEvent event) {
