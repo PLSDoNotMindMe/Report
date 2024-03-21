@@ -8,6 +8,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class FilterApplication extends Application {
+    public static void main(String[] args) {
+        launch();
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(FilterApplication.class.getResource("hello-view.fxml"));
@@ -15,10 +19,5 @@ public class FilterApplication extends Application {
         stage.setTitle("Работа с отчётом");
         stage.setScene(scene);
         stage.show();
-    }
-
-
-    public static void main(String[] args) {
-        launch();
     }
 }

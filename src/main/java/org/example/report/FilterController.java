@@ -1,18 +1,18 @@
 package org.example.report;
 
-import com.spire.xls.*;
-import com.spire.xls.collections.AutoFiltersCollection;
-import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
-import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
+import com.spire.xls.Workbook;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,12 +23,18 @@ import java.util.ResourceBundle;
 
 public class FilterController implements Initializable {
 
-    FileChooser fileChooser = new FileChooser();
     static String fileChoose;
     static LocalDate currentDate;
-    String user = System.getProperty("user.name");
     static boolean isCheck;
+    @FXML
+    public CheckBox Check;
+    @FXML
+    public DatePicker myDatePicker;
+    FileChooser fileChooser = new FileChooser();
+    String user = System.getProperty("user.name");
     DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    @FXML
+    private Label nameOut;
 
     public LocalDate dateCurrent() {
         return currentDate;
@@ -52,11 +58,7 @@ public class FilterController implements Initializable {
     }
 
     public void checkPivotTable() {
-        if (Check.isSelected()) {
-            isCheck = true;
-        } else {
-            isCheck = false;
-        }
+        isCheck = Check.isSelected();
     }
 
     @FXML
@@ -82,15 +84,6 @@ public class FilterController implements Initializable {
     void CheckPt(ActionEvent event) {
 
     }
-
-    @FXML
-    public CheckBox Check;
-
-    @FXML
-    private Label nameOut;
-
-    @FXML
-    public DatePicker myDatePicker;
 
     @FXML
     void Error503(MouseEvent event) throws FileNotFoundException {
