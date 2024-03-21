@@ -31,14 +31,17 @@ public class FilterController implements Initializable {
     DateTimeFormatter formatDate = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
     public LocalDate dateCurrent() {
-      return currentDate;
+        return currentDate;
     }
+
     public String choosenFile() {
-       return fileChoose;
+        return fileChoose;
     }
+
     public boolean checkPivot() {
         return isCheck;
     }
+
     public void fileCheck() {
         Path path = Path.of("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
         if (Files.notExists(path)) {
@@ -47,6 +50,7 @@ public class FilterController implements Initializable {
             wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
         }
     }
+
     public void checkPivotTable() {
         if (Check.isSelected()) {
             isCheck = true;
@@ -54,9 +58,12 @@ public class FilterController implements Initializable {
             isCheck = false;
         }
     }
+
     @FXML
     public void getDate(ActionEvent event) {
-        currentDate = myDatePicker.getValue();}
+        currentDate = myDatePicker.getValue();
+    }
+
     @FXML
     public void chooseFile(MouseEvent event) {
         File file = fileChooser.showOpenDialog(new Stage());
@@ -65,10 +72,12 @@ public class FilterController implements Initializable {
         String fileName = file.getName();
         nameOut.setText(fileName);
     }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         fileChooser.setInitialDirectory(new File("C:\\Users\\" + user + "\\Downloads"));
     }
+
     @FXML
     void CheckPt(ActionEvent event) {
 
@@ -84,32 +93,9 @@ public class FilterController implements Initializable {
     public DatePicker myDatePicker;
 
     @FXML
-    void Error503(MouseEvent event) {
-//        //Выбор файла, создание документа
-//        File file = fileChooser.showOpenDialog(new Stage());
-//        file.getAbsoluteFile();
-//        String fileChoose = String.valueOf(file);
-//        Workbook wb = new Workbook();
-//        wb.loadFromFile(fileChoose, ",", 1, 1);
-//        Worksheet sheet = wb.getWorksheets().get(0);
-//        int lastRow = sheet.getLastRow();
-//        sheet.getCellRange("A1:V" + lastRow).setIgnoreErrorOptions(EnumSet.of(IgnoreErrorType.NumberAsText));
-//        CellRange range = sheet.getCellRange("M1:M" + lastRow);
-//        range.setNumberFormat("dd.mm.yyyy");
-//        //Перенос текста по столбцам и применение автофильтра
-//        AutoFiltersCollection filters = sheet.getAutoFilters();
-//        filters.setRange(sheet.getCellRange(1, 1, lastRow, 22));
-//        //Фильтр колонки "Статус"
-//        filters.addFilter(1, "Сформирован");
-//        //Фильтр колонки "Завершили формирование"
-//        if (currentDate == null) {
-//            currentDate = LocalDate.now();
-//        }
-//        filters.customFilter(2, FilterOperatorType.NotEqual, formatDate.format(currentDate), true, FilterOperatorType.NotEqual, "");
-//        filters.filter();
-//
-//        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\503.xlsx");
-
+    void Error503(MouseEvent event) throws FileNotFoundException {
+        Report_503 object = new Report_503();
+        object.createReport_503();
     }
 
     @FXML
@@ -120,7 +106,7 @@ public class FilterController implements Initializable {
     }
 
     @FXML
-    void Error501(MouseEvent event) throws FileNotFoundException{
+    void Error501(MouseEvent event) throws FileNotFoundException {
         checkPivotTable();
         Report_501 object = new Report_501();
         object.createReport_501();
@@ -142,14 +128,14 @@ public class FilterController implements Initializable {
 
     @FXML
     void Error106(MouseEvent event) throws FileNotFoundException {
-      Report_106 object = new Report_106();
-      object.createReport_106();
+        Report_106 object = new Report_106();
+        object.createReport_106();
     }
 
     @FXML
     void Error307(MouseEvent event) throws FileNotFoundException {
-      Report_307 object = new Report_307();
-      object.createReport_307();
+        Report_307 object = new Report_307();
+        object.createReport_307();
     }
 
     @FXML
@@ -161,8 +147,8 @@ public class FilterController implements Initializable {
 
     @FXML
     void Transit(MouseEvent event) throws FileNotFoundException {
-       Report_Transit object = new Report_Transit();
-       object.createReport_Transit();
+        Report_Transit object = new Report_Transit();
+        object.createReport_Transit();
     }
 
 }
