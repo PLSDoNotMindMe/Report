@@ -153,89 +153,10 @@ public class FilterController implements Initializable {
     }
 
     @FXML
-    void Error627(MouseEvent event) {
-        //Создание документа, установка автофильтра
-        Workbook wb = new Workbook();
-        wb.loadFromFile(fileChoose);
-        Worksheet sheet = wb.getWorksheets().get(0);
-        AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastRow = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
-
-        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 627 ОШИБКИ:
-        //Фильтр колонки "Тип"
-        filters.addFilter(3, "Коробка");
-        filters.addFilter(3, "Мешок");
-        filters.addFilter(3, "Сейф пакет");
-        //Фильтр колонки "Статус"
-        filters.addFilter(2, "Сформирован");
-        filters.addFilter(2, "Прибыл в место назначения");
-        //Фильтр колонки "Цена"
-        filters.customFilter(9, FilterOperatorType.NotEqual, " ");
-        //Фильтр колонки "Дата прихода"
-        CellRange range = sheet.getCellRange("M1:M" + lastRow);
-        range.setNumberFormat("dd.MM.yyyy");
-        if (currentDate == null) {
-            currentDate = LocalDate.now();
-        }
-        filters.customFilter(12, FilterOperatorType.NotEqual, currentDate);
-        filters.filter();
-
-        if (Check.isSelected()) {
-            fileCheck();
-
-            //Копирование видимых ячеек
-            Worksheet sheet1 = wb.getWorksheets().add("627");
-
-            int index = 0;
-            for (int i = 1; i <= sheet.getRows().length; i++) {
-                if (sheet.getRowIsHide(i)) {
-                    continue;
-                } else {
-                    sheet1.insertRow(index + 1);
-                    sheet.copy(sheet.getRows()[i - 1], sheet1.getRows()[index], true, true, true);
-                    index++;
-                }
-                System.out.println(i);
-            }
-            //Копирование листа в другой файл
-            Workbook wb2 = new Workbook();
-            wb2.loadFromFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\Ежедневный отчёт по ошибкам СПБ_ТСЦ_Шушары " + formatDate.format(currentDate) + ".xlsx");
-            Worksheet sheetOfWorkbook1 = wb2.getWorksheets().add("Необработанные ТМ");
-            Worksheet sheetwork = wb2.getWorksheets().add("627");
-            Worksheet sheetwork1 = wb2.getWorksheets().add("Проверенные груза");
-
-            sheetwork.copyFrom(sheet1);
-
-            //Сводная таблица
-            CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
-            ;
-            PivotCache cache = wb2.getPivotCaches().add(dataRange);
-            PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
-            PivotField pf = null;
-            if (pt.getPivotFields().get("Тип") instanceof PivotField) {
-                pf = (PivotField) pt.getPivotFields().get("Тип");
-            }
-            PivotField pf1 = null;
-            if (pt.getPivotFields().get("Текущее место") instanceof PivotField) {
-                pf1 = (PivotField) pt.getPivotFields().get("Текущее место");
-            }
-            pf.setAxis(AxisTypes.Row);
-            pf1.setAxis(AxisTypes.Row);
-            pt.getDataFields().add(pt.getPivotFields().get("ID предмета"), "Количество по полю ID предмета", SubtotalTypes.Sum);
-            PivotField pf2 = null;
-            if (pt.getPivotFields().get("Дата прихода на СЦ") instanceof PivotField) {
-                pf2 = (PivotField) pt.getPivotFields().get("Дата прихода на СЦ");
-            }
-            pf2.setAxis(AxisTypes.Column);
-            pt.getOptions().setColumnHeaderCaption("Дата прихода на СЦ");
-            pt.setBuiltInStyle(PivotBuiltInStyles.PivotStyleMedium10);
-
-            wb2.save();
-        } else {
-            wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\627.xlsx");
-        }
-
+    void Error627(MouseEvent event) throws FileNotFoundException {
+        checkPivotTable();
+        Report_627 object = new Report_627();
+        object.createReport_627();
     }
 
     @FXML
