@@ -141,27 +141,9 @@ public class FilterController implements Initializable {
     }
 
     @FXML
-    void Error106(MouseEvent event) {
-        //Создание документа, установка автофильтра
-        Workbook wb = new Workbook();
-        wb.loadFromFile(fileChoose);
-        Worksheet sheet = wb.getWorksheets().get(0);
-        AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastRow = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
-
-        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 106 ОШИБКИ:
-        //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "");
-        //Фильтр колонки "В перевозке"
-        filters.addFilter(27, "Нет");
-        //Фильтр колонки "Зона"
-        filters.addFilter(10, "Зона контроля");
-        //Фильтр колонки "Текущее место"
-        filters.addFilter(11, "Зона контроля/Зона контроля-Expired SLA");
-        filters.filter();
-
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\106.xlsx");
+    void Error106(MouseEvent event) throws FileNotFoundException {
+      Report_106 object = new Report_106();
+      object.createReport_106();
     }
 
     @FXML
