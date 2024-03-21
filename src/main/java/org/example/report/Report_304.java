@@ -92,6 +92,7 @@ public class Report_304 {
         } else {
             wb.saveToFile("C:\\Users\\" + filterController.user + "\\Desktop\\Ошибки\\304.xlsx");
         }
+        System.out.println(filterController.dateCurrent());
     }
 }
 

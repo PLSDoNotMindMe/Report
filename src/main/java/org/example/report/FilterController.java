@@ -37,6 +37,9 @@ public class FilterController implements Initializable {
     private Label nameOut;
 
     public LocalDate dateCurrent() {
+        if (currentDate == null ) {
+            currentDate = LocalDate.now();
+        }
         return currentDate;
     }
 
@@ -89,6 +92,7 @@ public class FilterController implements Initializable {
     void Error503(MouseEvent event) throws FileNotFoundException {
         Report_503 object = new Report_503();
         object.createReport_503();
+        System.out.println(currentDate);
     }
 
     @FXML
