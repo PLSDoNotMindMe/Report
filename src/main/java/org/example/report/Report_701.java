@@ -1,9 +1,5 @@
 package org.example.report;
 
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import java.io.File;
 import java.io.FileNotFoundException;
 
 public class Report_701 {

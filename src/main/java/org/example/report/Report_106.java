@@ -1,12 +1,10 @@
 package org.example.report;
 
-import com.spire.xls.*;
+import com.spire.xls.Workbook;
+import com.spire.xls.Worksheet;
 import com.spire.xls.collections.AutoFiltersCollection;
-import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
-import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDate;
 
 public class Report_106 {
 

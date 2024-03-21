@@ -33,7 +33,6 @@ public class Report_304 {
         filters.customFilter(9, FilterOperatorType.NotEqual, " ");
         //Фильтр колонки "Дата прихода"
         CellRange range = sheet.getCellRange("M1:M" + lastRow);
-        ;
         range.setNumberFormat("dd.mm.yyyy");
         LocalDate currenDateMinus = filterController.dateCurrent().minusDays(1);
         filters.addDateFilter(12, DateTimeGroupingType.Day, currenDateMinus.getYear(), currenDateMinus.getMonthValue(), currenDateMinus.getDayOfMonth(), 0, 0, 0);
@@ -73,7 +72,6 @@ public class Report_304 {
 
             //Сводная таблица
             CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
-            ;
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
             PivotField pf = null;

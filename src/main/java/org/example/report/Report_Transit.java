@@ -22,10 +22,10 @@ public class Report_Transit {
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Транзитная коробка");
         //Фильтр колонки "Наименование"
-        filters.customFilter(1, FilterOperatorType.Equal,"sr*");
+        filters.customFilter(1, FilterOperatorType.Equal, "sr*");
         filters.filter();
 
-        wb.saveToFile("C:\\Users\\" +filterController.user + "\\Desktop\\Ошибки\\Транзитные коробки.xlsx");
+        wb.saveToFile("C:\\Users\\" + filterController.user + "\\Desktop\\Ошибки\\Транзитные коробки.xlsx");
 
     }
 }

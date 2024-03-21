@@ -1,12 +1,6 @@
 package org.example.report;
 
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 
 public class Report_503 {

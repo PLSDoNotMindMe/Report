@@ -25,7 +25,7 @@ public class Report_501 {
         //Добавить столбец для ВПР
         sheet.insertColumn(34);
         sheet.get(1, 34).setValue("ВПР");
-        sheet.get(1, 33).get(String.format("AH1")).setStyle(sheet.get(1, 34).get(String.format("AG1")).getStyle());
+        sheet.get(1, 33).get("AH1").setStyle(sheet.get(1, 34).get("AG1").getStyle());
         sheet.get(1, 34).autoFitColumns();
         //Фильтр колонки "Тип"
         filters.addFilter(3, "Отправление");
@@ -71,7 +71,6 @@ public class Report_501 {
 
             //Сводная таблица
             CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
-            ;
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
             PivotField pf = null;

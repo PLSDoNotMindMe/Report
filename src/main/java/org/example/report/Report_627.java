@@ -2,11 +2,9 @@ package org.example.report;
 
 import com.spire.xls.*;
 import com.spire.xls.collections.AutoFiltersCollection;
-import com.spire.xls.core.spreadsheet.autofilter.DateTimeGroupingType;
 import com.spire.xls.core.spreadsheet.autofilter.FilterOperatorType;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDate;
 
 public class Report_627 {
 
@@ -65,7 +63,6 @@ public class Report_627 {
 
             //Сводная таблица
             CellRange dataRange = sheetwork.getCellRange("A1:AH" + lastRow);
-            ;
             PivotCache cache = wb2.getPivotCaches().add(dataRange);
             PivotTable pt = sheetOfWorkbook1.getPivotTables().add("Количество по полю ID предмета", sheetOfWorkbook1.getCellRange("A3"), cache);
             PivotField pf = null;
