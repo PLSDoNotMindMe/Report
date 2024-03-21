@@ -147,37 +147,9 @@ public class FilterController implements Initializable {
     }
 
     @FXML
-    void Error307(MouseEvent event) {
-        //Создание документа, установка автофильтра
-        Workbook wb = new Workbook();
-        wb.loadFromFile(fileChoose);
-        Worksheet sheet = wb.getWorksheets().get(0);
-        AutoFiltersCollection filters = sheet.getAutoFilters();
-        int lastRow = sheet.getLastRow();
-        filters.setRange(sheet.getCellRange(1, 1, lastRow, 34));
-
-        //ПРИМЕНЕНИЕ ФИЛЬТРОВ 307 ОШИБКИ:
-        //Фильтр колонки "Контейнер (груз)"
-        filters.addFilter(4, "");
-        //Фильтр колонки "В перевозке"
-        filters.addFilter(27, "Нет");
-        //Фильтр колонки "Дата прихода"
-        if (currentDate == null) {
-            currentDate = LocalDate.now();
-        }
-        LocalDate currenDateMinus = currentDate.minusDays(1);
-        filters.addDateFilter(12, DateTimeGroupingType.Day, currenDateMinus.getYear(), currenDateMinus.getMonthValue(), currenDateMinus.getDayOfMonth(), 0, 0, 0);
-        //Фильтр колонки "Зона"
-        filters.addFilter(10, "Зона возвратов");
-        //Фильтр колонки "Транзит"
-        filters.addFilter(17, "Транзитный пункт");
-        //Фильтр колонки "Поток"
-        filters.addFilter(16, "Прямой");
-        //Фильтр колонки "Тип"
-        filters.addFilter(3, "Отправление");
-        filters.filter();
-
-        wb.saveToFile("C:\\Users\\" + user + "\\Desktop\\Ошибки\\307.xlsx");
+    void Error307(MouseEvent event) throws FileNotFoundException {
+      Report_307 object = new Report_307();
+      object.createReport_307();
     }
 
     @FXML
